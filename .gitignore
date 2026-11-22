@@ -1,0 +1,5 @@
+work/frames/
+work/seg_*.mp4
+work/clip*.mp4
+work/*.wav
+out/

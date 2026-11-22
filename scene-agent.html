@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<!-- SPDX-License-Identifier: MIT -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Scene 2 — the agent works</title>
+<style>
+  html, body { margin: 0; padding: 0; background: #191419; width: 1080px; height: 1920px; overflow: hidden;
+    font-family: "DejaVu Sans", sans-serif; color: #fff; }
+  .wrap { padding: 440px 80px 0 80px; }
+  .kicker { font-size: 40px; font-weight: 700; letter-spacing: 6px; color: #ff8fd0; }
+  h1 { font-size: 96px; line-height: 1.1; font-weight: 900; margin: 26px 0 40px 0; }
+  .term { background: #0f0b10; border: 3px solid #3a2f3d; border-radius: 24px; padding: 44px 46px;
+    min-height: 460px; font-family: "DejaVu Sans Mono", monospace; }
+  .term .line { font-size: 34px; line-height: 1.55; margin: 10px 0; white-space: nowrap; }
+  .term .cmd { color: #ffd23f; }
+  .term .ok { color: #7be495; }
+  .term .dim { color: rgba(255,255,255,0.55); }
+  .term .done { color: #7be495; font-weight: 700; }
+  .bar { margin-top: 40px; height: 26px; background: #2c2230; border-radius: 13px; overflow: hidden; }
+  .bar .fill { height: 100%; width: 0%; background: linear-gradient(90deg, #c41c83, #ff5db1); }
+  .code { margin-top: 36px; background: #1d1420; border-radius: 20px; padding: 36px 40px;
+    font-family: "DejaVu Sans Mono", monospace; font-size: 30px; line-height: 1.6; }
+  .code .k { color: #ff8fd0; } .code .s { color: #ffd23f; } .code .c { color: #7be495; }
+  .code .p { color: rgba(255,255,255,0.6); }
+  .foot { margin-top: 40px; font-size: 46px; font-weight: 900; color: #fff; text-align: center; }
+  .foot span { color: #ff5db1; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="kicker">AND THEN…</div>
+  <h1>THE AGENT<br>GETS TO WORK</h1>
+  <div class="term" id="term"></div>
+  <div class="bar"><div class="fill" id="fill"></div></div>
+  <div class="code" id="code"></div>
+  <div class="foot" id="foot">no hand-holding. <span>just building.</span></div>
+</div>
+<script>
+'use strict';
+const LINES = [
+  { html: '<span class="cmd">$ agent build "star-catch"</span>', at: 0.3 },
+  { html: '<span class="dim">▸ reading the prompt ...... ok</span>', at: 1.2 },
+  { html: '<span class="dim">▸ writing game.html — 312 lines</span>', at: 2.1 },
+  { html: '<span class="dim">▸ physics, particles, combos</span>', at: 3.0 },
+  { html: '<span class="dim">▸ playtest: 60s • 0 crashes</span>', at: 3.9 },
+  { html: '<span class="done">✓ game built in 47 seconds</span>', at: 4.9 },
+];
+const CODE = [
+  { html: '<span class="k">function</span> <span class="c">spawn</span>() { <span class="p">// a star falls</span>', at: 1.6 },
+  { html: '&nbsp;&nbsp;type = <span class="s">\'star\'</span>;', at: 2.4 },
+  { html: '&nbsp;&nbsp;speed = 340 + elapsed * 7;', at: 2.8 },
+  { html: '&nbsp;&nbsp;score += 10 * <span class="c">combo</span>; <span class="c">burst</span>(x, y);', at: 3.2 },
+  { html: '}', at: 4.0 },
+];
+const t0 = performance.now();
+const term = document.getElementById('term');
+const code = document.getElementById('code');
+const fill = document.getElementById('fill');
+const foot = document.getElementById('foot');
+const shown = new Set(), shownCode = new Set();
+function frame(now) {
+  const t = (now - t0) / 1000;
+  for (const l of LINES) {
+    if (t >= l.at && !shown.has(l)) {
+      shown.add(l);
+      const d = document.createElement('div');
+      d.className = 'line'; d.innerHTML = l.html;
+      term.appendChild(d);
+    }
+  }
+  for (const l of CODE) {
+    if (t >= l.at && !shownCode.has(l)) {
+      shownCode.add(l);
+      const d = document.createElement('div');
+      d.innerHTML = l.html;
+      code.appendChild(d);
+    }
+  }
+  fill.style.width = Math.min(100, (t / 5.2) * 100) + '%';
+  foot.style.opacity = Math.min(1, Math.max(0, (t - 5.4) * 2));
+  requestAnimationFrame(frame);
+}
+requestAnimationFrame(frame);
+</script>
+</body>
+</html>

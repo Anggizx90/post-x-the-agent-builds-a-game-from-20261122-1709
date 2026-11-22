@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<!-- SPDX-License-Identifier: MIT -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Scene 1 — the prompt</title>
+<style>
+  html, body { margin: 0; padding: 0; background: #191419; width: 1080px; height: 1920px; overflow: hidden;
+    font-family: "DejaVu Sans", sans-serif; color: #fff; }
+  .wrap { padding: 470px 80px 0 80px; }
+  .kicker { font-size: 40px; font-weight: 700; letter-spacing: 6px; color: #ff8fd0; }
+  h1 { font-size: 118px; line-height: 1.05; font-weight: 900; margin: 30px 0 0 0; }
+  h1 .mag { color: #ff5db1; }
+  .card { margin-top: 110px; background: #241a24; border: 3px solid #c41c83; border-radius: 28px;
+    padding: 56px 52px; min-height: 560px; }
+  .card .label { font-size: 34px; font-weight: 700; letter-spacing: 4px; color: #ffd23f; margin-bottom: 34px; }
+  .card .prompt { font-size: 58px; line-height: 1.45; font-weight: 700; }
+  .caret { display: inline-block; width: 8px; height: 58px; background: #ff5db1; vertical-align: -8px;
+    animation: blink 0.7s steps(1) infinite; }
+  @keyframes blink { 50% { opacity: 0; } }
+  .foot { margin-top: 90px; font-size: 44px; font-weight: 700; color: rgba(255,255,255,0.75); }
+  .foot .arr { color: #ff5db1; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="kicker" id="kicker">I GAVE MY AI AGENT…</div>
+  <h1 id="hook">ONE<br><span class="mag">PROMPT.</span></h1>
+  <div class="card" id="card">
+    <div class="label">THE PROMPT ↓</div>
+    <div class="prompt"><span id="typed"></span><span class="caret" id="caret"></span></div>
+  </div>
+  <div class="foot" id="foot">watch what happens <span class="arr">→</span></div>
+</div>
+<script>
+'use strict';
+const TEXT = 'Build me a tiny browser game: catch the falling stars, dodge the bombs. 60 seconds on the clock. Make it fun to play.';
+const t0 = performance.now();
+const typed = document.getElementById('typed');
+const kicker = document.getElementById('kicker');
+const hook = document.getElementById('hook');
+const card = document.getElementById('card');
+const foot = document.getElementById('foot');
+function frame(now) {
+  const t = (now - t0) / 1000;
+  kicker.style.opacity = Math.min(1, t * 3);
+  hook.style.opacity = Math.min(1, Math.max(0, (t - 0.25) * 3));
+  card.style.opacity = Math.min(1, Math.max(0, (t - 0.9) * 2));
+  foot.style.opacity = Math.min(1, Math.max(0, (t - 4.2) * 2));
+  const n = Math.max(0, Math.floor((t - 1.1) * 34));
+  typed.textContent = TEXT.slice(0, n);
+  requestAnimationFrame(frame);
+}
+requestAnimationFrame(frame);
+</script>
+</body>
+</html>
